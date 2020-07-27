@@ -16,8 +16,7 @@ class RoleController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
-        //$this->authorizeResource(User::class, 'users');
+        //$this->authorizeResource(Role::class, 'role');
     }
 
     /**
@@ -27,8 +26,6 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', Role::class);
-
         $roles = Role::with('permissions')
                     ->get();
 
@@ -42,8 +39,6 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Role::class);
-
         $permissions = Permission::all();
 
         return view('roles.create', ['permissions' => $permissions]);
@@ -57,8 +52,6 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', Role::class);
-
         $role = new Role;
         $role->name = $request->name;
         $role->slug = $request->slug;
@@ -77,8 +70,6 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-         $this->authorize('view', Role::class);
-
         return view('roles.show', ['role' => $role]);
     }
 
@@ -90,8 +81,6 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        $this->authorize('update', Role::class);
-
         $permissions = Permission::all();
 
         return view('roles.edit', ['role' => $role, 'permissions' => $permissions]);
@@ -106,8 +95,6 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        $this->authorize('update', Role::class);
-
         $role->name = $request->name;
 
         $role->permissions()->sync($request->permissions);
@@ -124,7 +111,6 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        $this->authorize('delete', User::class);
         //
     }
 }

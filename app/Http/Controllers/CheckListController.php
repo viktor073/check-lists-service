@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CheckList;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CheckListController extends Controller
 {
@@ -14,8 +15,7 @@ class CheckListController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
-        $this->authorizeResource(CheckList::class, 'checkList');
+        //$this->authorizeResource(CheckList::class, 'checkList');
     }
 
     /**
@@ -25,10 +25,9 @@ class CheckListController extends Controller
      */
     public function index(Request $request)
     {
-        $checkLists = CheckList::with('itemCheckLists')
-                    ->with('user')
-                    ->get();
-        return view('checkLists.index', ['checkLists' => $checkLists]);
+        $checkLists = CheckList::with('itemCheckLists', 'user')
+                    ->paginate(5);
+        return view('checkLists.index', compact('checkLists'));
     }
 
     /**
@@ -49,12 +48,11 @@ class CheckListController extends Controller
      */
     public function store(Request $request)
     {
-        $checkList = new CheckList;
-        $checkList->name = $request->name;
-        $checkList->slug = $request->slug;
-        $checkList->user_id = auth()->user()->id;
-
-        $checkList->save();
+        $checkList = CheckList::create([
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'user_id' => Auth::id(),
+        ]);
 
         return redirect()->route('checkLists.show', [$checkList])->with('status', 'Check List create!');
     }
@@ -90,8 +88,10 @@ class CheckListController extends Controller
      */
     public function update(Request $request, CheckList $checkList)
     {
-        $checkList->name = $request->name;
-        $checkList->slug = $request->slug;
+        $checkList = $checkList->fill([
+            'name' => $request->name,
+            'slug' => $request->slug,
+        ]);
 
         $checkList->save();
 

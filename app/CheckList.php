@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class CheckList extends Model
 {
 	protected $fillable = [
-        'name', 'slug',
+        'name', 'slug', 'user_id',
     ];
 
     public function itemCheckLists()

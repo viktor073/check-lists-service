@@ -9,6 +9,16 @@ use Illuminate\Http\Request;
 class ItemCheckListController extends Controller
 {
     /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //$this->authorizeResource(ItemCheckList::class, 'itemCheckList');
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -16,17 +26,6 @@ class ItemCheckListController extends Controller
     public function index()
     {
         abort(404);
-    }
-
-    /**
-     * Instantiate a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-        //$this->authorizeResource(User::class, 'users');
     }
 
     /**

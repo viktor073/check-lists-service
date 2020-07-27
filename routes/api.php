@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 Route::post('register', 'API\RegisterController@register');
 
-Route::apiResource('checkLists', 'API\CheckListController');
+Route::middleware('auth:api')->group(function () {
+	Route::apiResource('checkLists', 'API\CheckListController');
 
-Route::apiResource('checkLists.itemCheckLists', 'API\ItemCheckListController')->shallow();
-
+	Route::apiResource('checkLists.itemCheckLists', 'API\ItemCheckListController')->shallow();
+});

@@ -4,18 +4,26 @@ namespace App\Policies;
 
 use App\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Support\Facades\Auth;
 
 class UserPolicy
 {
     use HandlesAuthorization;
 
-    public function before($user)
+    public function before(User $user)
     {
         if ($user->hasRole('super-admin')) {
-            return true;
+           return true;
         }
+        return null;
     }
 
+    /**
+     * Determine whether the user can view any models.
+     *
+     * @param  \App\User  $user
+     * @return mixed
+     */
     public function viewAny(User $user)
     {
         return $user->hasPermissionTo('user-viewAny');

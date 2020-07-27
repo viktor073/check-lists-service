@@ -3,17 +3,19 @@
 namespace App\Policies;
 
 use App\User;
+use App\CheckList;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class CheckListPolicy
 {
     use HandlesAuthorization;
 
-     public function before($user)
+    public function before(User $user)
     {
         if ($user->hasRole('super-admin')) {
-            return true;
+           return true;
         }
+        return null;
     }
 
     /**
@@ -24,7 +26,7 @@ class CheckListPolicy
      */
     public function viewAny(User $user)
     {
-         return $user->hasPermissionTo('checkList-viewAny');
+        return $user->hasPermissionTo('checkList-viewAny');
     }
 
     /**
@@ -58,7 +60,7 @@ class CheckListPolicy
      * @param  \App\Role  $role
      * @return mixed
      */
-    public function update(User $user, $checkList)
+    public function update(User $user, CheckList $checkList)
     {
         return $user->hasPermissionTo('checkList-update')
             && $user->id === $checkList->user_id
@@ -72,7 +74,7 @@ class CheckListPolicy
      * @param  \App\checkList  $role
      * @return mixed
      */
-    public function delete(User $user)
+    public function delete(User $user, CheckList $checkList)
     {
         return $user->hasPermissionTo('checkList-delete')
             && $user->id === $checkList->user_id

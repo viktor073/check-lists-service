@@ -45,6 +45,7 @@
 						</tbody>
 					</table>
                 </div>
+                {{ $checkLists->links() }}
             </div>
         </div>
     </div>

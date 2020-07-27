@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Role;
 use App\Permission;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -16,8 +17,7 @@ class UserController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
-        //$this->authorizeResource(User::class, 'users');
+        //$this->authorizeResource(User::class, 'user');
     }
 
     /**
@@ -27,8 +27,6 @@ class UserController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', User::class);
-
         $users = User::with('roles')
                     ->with('permissions')
                     ->get();
@@ -55,7 +53,6 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-       // $this->authorize('create', User::class);
         abort(404);
 
     }
@@ -68,8 +65,6 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $this->authorize('view', User::class);
-
         return view('users.show', ['user' => $user]);
     }
 
@@ -81,8 +76,6 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $this->authorize('update', User::class);
-
         $roles = Role::all();
         $permissions = Permission::all();
 
@@ -98,11 +91,10 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $this->authorize('update', User::class);
         $status = '';
         $user->name = $request->name;
         $user->email = $request->email;
-        if ($user->can('editCountCheckList', User::class)) {
+        if (Auth::user()->can('editCountCheckList', User::class)) {
             $user->max_count_check_lists = $request->maxCountCheckLists;
         }
 
@@ -122,8 +114,6 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //$this->authorize('delete', User::class);
-        //
         abort(404);
     }
 
@@ -136,7 +126,6 @@ class UserController extends Controller
     public function block(User $user)
     {
         $this->authorize('block', User::class);
-
         if ($user->active == 1) {
             $user->active = 0;
             $status = 'Profile blocked!';

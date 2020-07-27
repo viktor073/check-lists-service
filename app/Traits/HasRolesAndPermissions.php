@@ -25,11 +25,7 @@ trait HasRolesAndPermissions
 
     public function hasRole($role)
     {
-        if ($this->roles->contains('slug', $role)) {
-            return true;
-        }
-
-        return false;
+        return $this->roles->contains('slug', $role);
     }
 
     public function refreshRoles(... $roles )
@@ -44,10 +40,7 @@ trait HasRolesAndPermissions
      */
     protected function hasPermission($permission)
     {
-        if ($this->permissions->contains('slug', $permission->slug)) {
-            return true;
-        }
-        return false;
+        return $this->permissions->contains('slug', $permission->slug);
     }
 
     /**

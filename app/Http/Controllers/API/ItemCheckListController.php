@@ -25,7 +25,6 @@ class ItemCheckListController extends BaseController
      */
     public function __construct()
     {
-        $this->middleware('auth:api');
         $this->authorizeResource(ItemCheckList::class, 'itemCheckList');
     }
 

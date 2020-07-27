@@ -49,10 +49,7 @@ class User extends Authenticatable
 
     public function isActive()
     {
-        if ($this->active == 1) {
-            return true;
-        }
-        return false;
+        return $this->active == 1;
     }
 
 

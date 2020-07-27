@@ -4,8 +4,8 @@ namespace App\Http\Controllers\API;
 
 use App\CheckList;
 use App\ItemCheckList;
-
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CheckListController extends BaseController
 {
@@ -16,7 +16,6 @@ class CheckListController extends BaseController
      */
     public function __construct()
     {
-        $this->middleware('auth:api');
         $this->authorizeResource(CheckList::class, 'checkList');
     }
 
@@ -28,7 +27,7 @@ class CheckListController extends BaseController
     public function index()
     {
         $checkLists = CheckList::with('user')
-                    ->get();
+                    ->paginate(5);
 
         return $this->sendResponse($checkLists->toArray(), 'CheckLists retrieved successfully.');
     }
@@ -41,14 +40,13 @@ class CheckListController extends BaseController
      */
     public function store(Request $request)
     {
-            $checkList = new CheckList;
-            $checkList->name = $request->name;
-            $checkList->slug = $request->slug;
-            $checkList->user_id = auth()->user()->id;
+        $checkList = CheckList::create([
+            'name' => $request->name,
+            'slug' => $request->slug,
+            'user_id' => Auth::id(),
+        ]);
 
-            $checkList->save();
-
-            return $this->sendResponse($checkList->toArray(), 'CheckList added successfully.');
+        return $this->sendResponse($checkList->toArray(), 'CheckList added successfully.');
     }
 
     /**
